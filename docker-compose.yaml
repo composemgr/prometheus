@@ -1,0 +1,37 @@
+# nginx proxy address - http://172.17.0.1:9090
+
+name: prometheus
+x-logging: &default-logging
+  options:
+    max-size: '5m'
+    max-file: '1'
+  driver: json-file
+
+services:
+  app:
+    image: prom/prometheus:latest
+    container_name: prometheus-app
+    hostname: ${BASE_HOST_NAME:-$HOSTNAME}
+    restart: always
+    pull_policy: always
+    logging: *default-logging
+    environment:
+      TZ: ${TZ:-America/New_York}
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    ports:
+      - '172.17.0.1:9090:9090'
+    volumes:
+      - './rootfs/config/prometheus:/etc/prometheus'
+      - './rootfs/data/prometheus:/prometheus'
+    networks:
+      - prometheus
+
+networks:
+  prometheus:
+    name: prometheus
+    external: false
