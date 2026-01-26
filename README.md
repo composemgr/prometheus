@@ -1,35 +1,84 @@
 ## 👋 Welcome to prometheus 🚀
 
-Prometheus - Monitoring system and time series database
+Open-source monitoring and alerting toolkit
 
 ## 📋 Description
 
-Prometheus is an open-source systems monitoring and alerting toolkit. Collects and stores metrics as time series data.
+Open-source monitoring and alerting toolkit
 
 ## 🚀 Services
 
-- **app**: Prometheus (`prom/prometheus:latest`)
+- **app**: prom/prometheus:latest
 
 ## 📦 Installation
 
-```shell
+### Option 1: Quick Install
+```bash
+curl -q -LSsf "https://raw.githubusercontent.com/composemgr/prometheus/main/docker-compose.yaml" -o compose.yml
+```
+
+### Option 2: Git Clone
+```bash
+git clone "https://github.com/composemgr/prometheus" ~/.local/srv/docker/prometheus
+cd ~/.local/srv/docker/prometheus
+docker compose up -d
+```
+
+### Option 3: Using composemgr
+```bash
 composemgr install prometheus
 ```
 
 ## 🔧 Configuration
 
-Edit `rootfs/config/prometheus/prometheus.yml` to configure scrape targets.
+### Environment Variables
+
+```shell
+TZ=America/New_York
+```
+
+See `docker-compose.yaml` for complete list of configurable options.
 
 ## 🌐 Access
 
-- **Prometheus**: http://localhost:9090
+- **Web Interface**: http://172.17.0.1:9090
 
 ## 📂 Volumes
 
-- `./rootfs/config/prometheus` - Configuration files
-- `./rootfs/data/prometheus` - Time series data
+- `./rootfs/config/prometheus` - Data storage
+- `./rootfs/data/prometheus` - Data storage
+
+## 🔍 Logging
+
+```shell
+docker compose logs -f app
+```
+
+## 🛠️ Management
+
+```bash
+# Start services
+docker compose up -d
+
+# Stop services
+docker compose down
+
+# Update to latest images
+docker compose pull && docker compose up -d
+
+# View logs
+docker compose logs -f
+
+# Restart services
+docker compose restart
+```
+
+## 📋 Requirements
+
+- Docker Engine 20.10+
+- Docker Compose V2+
 
 ## 🤝 Author
 
-🤖 casjay: [Github](https://github.com/casjay) 🤖
+🤖 casjay: [Github](https://github.com/casjay) 🤖  
 🦄 composemgr: [Github](https://github.com/composemgr) 🦄
