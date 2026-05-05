@@ -45,8 +45,8 @@ See `docker-compose.yaml` for complete list of configurable options.
 
 ## 📂 Volumes
 
-- `./rootfs/config/prometheus` - Data storage
-- `./rootfs/data/prometheus` - Data storage
+- `./volumes/config/prometheus` - Data storage
+- `./volumes/data/prometheus` - Data storage
 
 ## 🔍 Logging
 
