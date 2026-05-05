@@ -26,8 +26,8 @@ services:
     ports:
       - '172.17.0.1:9090:9090'
     volumes:
-      - './rootfs/config/prometheus:/etc/prometheus'
-      - './rootfs/data/prometheus:/prometheus'
+      - './volumes/config/prometheus:/etc/prometheus'
+      - './volumes/data/prometheus:/prometheus'
     networks:
       - prometheus
 
