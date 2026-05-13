@@ -17,6 +17,8 @@ services:
     logging: *default-logging
     environment:
       TZ: ${TZ:-America/New_York}
+      CONTAINER_NAME: prometheus-app
+      HOSTNAME: ${BASE_HOST_NAME:-$HOSTNAME}
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -31,8 +33,30 @@ services:
       - './volumes/data/prometheus:/prometheus'
     networks:
       - prometheus
+      - proxy
+      - cloudflare
+    labels:
+      - 'traefik.enable=true'
+      - 'cloudflare.enable=true'
+      - 'traefik.docker.network=proxy'
+      - 'cloudflare.service=http://prometheus-app:9090'
+      - 'cloudflare.hostname=prometheus.${CLOUDFLARE_ZONE_NAME:-}'
+      - 'traefik.http.routers.prometheus-app.entrypoints=http'
+      - 'traefik.http.routers.prometheus-app-secure.tls=true'
+      - 'traefik.http.routers.prometheus-app.rule=Host($(${BASE_HOST_NAME:-$HOSTNAME}))'
+      - 'traefik.http.middlewares.prometheus-app-https-redirect.redirectscheme.scheme=https'
+      - 'traefik.http.routers.prometheus-app.middlewares=prometheus-app-https-redirect'
+      - 'traefik.http.routers.prometheus-app-secure.entrypoints=https'
+      - 'traefik.http.routers.prometheus-app-secure.rule=Host($(${BASE_HOST_NAME:-$HOSTNAME}))'
+      - 'traefik.http.routers.prometheus-app-secure.tls.certresolver=cloudflare'
+      - 'traefik.http.routers.prometheus-app-secure.service=prometheus-app'
+      - 'traefik.http.services.prometheus-app.loadbalancer.server.port=9090'
 
 networks:
   prometheus:
     name: prometheus
     external: false
+  proxy:
+    external: true
+  cloudflare:
+    external: true
